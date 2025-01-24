@@ -12,6 +12,9 @@ people = {}
 # Maps movie_ids to a dictionary of: title, year, stars (a set of person_ids)
 movies = {}
 
+# TEST
+# Name: jack nicholson
+# Name: emma watson
 
 def load_data(directory):
     """
@@ -92,8 +95,34 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    frontier = QueueFrontier()
+    start = Node(state=source, parent=None, action=None)
+    frontier.add(start) # add node!
+
+    reached = set()
+    reached.add(start) # add state
+
+    while True:
+        #print('while true')
+        if frontier.empty():
+            return None
+
+        node = frontier.remove()
+        if node.state == target:
+            #print('target found')
+            path = []
+            while node.parent is not None:
+                #print('while parent not none')
+                path.append((node.action, node.state))
+                node = node.parent
+            path.reverse()
+            return path
+
+        for action, state in neighbors_for_person(node.state):
+            if state not in reached:
+                child = Node(state=state, parent=node, action=action)
+                frontier.add(child)
+                reached.add(child.state)
 
 
 def person_id_for_name(name):
